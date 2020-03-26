@@ -53,19 +53,12 @@ local function str_int32(int)
                 band(int, 0xff))
 end
 
-
+local intptr_t = ffi.new('int64_t[1]')
 -- XX int can be cdata: LL or lua number
 local function str_int64(int)
-    return char(tonumber(band(rshift(int, 56), 0xff)),
-                tonumber(band(rshift(int, 48), 0xff)),
-                tonumber(band(rshift(int, 40), 0xff)),
-                tonumber(band(rshift(int, 32), 0xff)),
-                tonumber(band(rshift(int, 24), 0xff)),
-                tonumber(band(rshift(int, 16), 0xff)),
-                tonumber(band(rshift(int, 8), 0xff)),
-                tonumber(band(int, 0xff)))
+    intptr_t[0] = int
+    return ffi.string(ffi.cast('char*', intptr_t),8):reverse()
 end
-
 
 function _M.new(self, apikey, correlation_id, client_id, api_version)
     local c_len = #client_id

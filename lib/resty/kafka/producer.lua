@@ -343,10 +343,11 @@ function _M.new(self, broker_list, producer_config, cluster_name)
         socket_config = cli.socket_config,
         _timer_flushing_buffer = false,
         ringbuffer = ringbuffer:new(opts.batch_num or 200, opts.max_buffering or 50000),   -- 200, 50K
-        sendbuffer = sendbuffer:new(opts.batch_num or 200, opts.batch_size or 1048576)
+        sendbuffer = sendbuffer:new(opts.batch_num or 200, opts.batch_size or 1048576),
                         -- default: 1K, 1M
                         -- batch_size should less than (MaxRequestSize / 2 - 10KiB)
                         -- config in the kafka server, default 100M
+        default_topic = opts.default_topic,
     }, mt)
 
     if async then
@@ -364,6 +365,7 @@ end
 
 -- offset is cdata (LL in luajit)
 function _M.send(self, topic, key, message)
+    topic = topic or self.default_topic
     if self.async then
         local ringbuffer = self.ringbuffer
 

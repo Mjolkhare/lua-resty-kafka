@@ -1,7 +1,7 @@
 %define release %(/bin/date +"%Y%m%d.%H%M")
 
 Name:    lua-resty-kafka
-Version: 0.08
+Version: 0.08.2
 Release: 1%{?dist}
 Summary: HMAC functions for ngx_lua and LuaJIT
 License: BSD
